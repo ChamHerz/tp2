@@ -197,7 +197,6 @@ void escanear_cadena(Scanner* scanner, char* file_chain){
 	int posicion_sumador = 0;
 	while (estado_actual != -1 && file_chain[posicion] != '\0'){
 		estado_actual = fila(columna(file_chain[posicion]));
-		//printf("%c\n",file_chain[posicion]);
 		if (esEstadoFinal(estado_actual)) {
 			sumador_caracteres[posicion_sumador] = '\0';
 			//printf("%s ",sumador_caracteres);
