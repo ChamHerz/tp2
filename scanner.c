@@ -89,6 +89,20 @@ void mostrar_tabla_transicion(Scanner* scanner){
 	}
 }
 
+void crear_tabla_simbolos(Scanner* scanner){
+	//Se crea un array de 50 unidades.
+	scanner->TABLA_SIMBOLOS = calloc(50,sizeof(struct tablaSimbolos));
+	scanner->TABLA_SIMBOLOS[0].IDENTIFICADOR = "inicio\0";
+	scanner->TABLA_SIMBOLOS[0].ES_RESERVADA = 15;
+	scanner->TABLA_SIMBOLOS[1].IDENTIFICADOR = "final\0";
+	scanner->TABLA_SIMBOLOS[1].ES_RESERVADA = 16;
+	scanner->TABLA_SIMBOLOS[2].IDENTIFICADOR = "leer\0";
+	scanner->TABLA_SIMBOLOS[2].ES_RESERVADA = 17;
+	scanner->TABLA_SIMBOLOS[3].IDENTIFICADOR = "escribir\0";
+	scanner->TABLA_SIMBOLOS[3].ES_RESERVADA = 18;
+	scanner->SIZE_TABLA_SIMBOLOS = 4; //Actualmente con 4 elementos
+}
+
 int columna(char caracter){
 	if (caracter >= 97 && caracter <= 122){ //de a a z
 		return 1;
@@ -172,7 +186,37 @@ char* imprimirToken(int unEstado){
 	if (unEstado == 13) {
 		return "ASIGNACION\0";
 	}
+	if (unEstado == 15) {
+		return "INICIO\0";
+	}
+	if (unEstado == 16) {
+		return "FIN\0";
+	}
+	if (unEstado == 17) {
+		return "LEER\0";
+	}
+	if (unEstado == 18) {
+		return "ESCRIBIR\0";
+	}
 	return "\0";
+}
+
+int cambiarTokenIdentificador(Scanner* scanner,char* unIdentificador){
+	int posicion = 0;
+	int comparar_cadenas = 1;
+	while (posicion < scanner->SIZE_TABLA_SIMBOLOS){
+		comparar_cadenas = strcmp(scanner->TABLA_SIMBOLOS[posicion].IDENTIFICADOR,unIdentificador);
+		if (comparar_cadenas == 0){
+			return scanner->TABLA_SIMBOLOS[posicion].ES_RESERVADA;
+		}
+		posicion++;
+	}
+	return 3;
+}
+
+void agregarToken(Scanner* scanner,int numeroToken){
+	scanner->ARRAY_TOKENS[scanner->SIZE_ARRAY_TOKENS] = numeroToken;
+	scanner->SIZE_ARRAY_TOKENS++;
 }
 
 void escanear_cadena(Scanner* scanner, char* file_chain){
@@ -191,16 +235,25 @@ void escanear_cadena(Scanner* scanner, char* file_chain){
 		return -1; //Caracter que no pertenece al alfabeto
 	}
 
+	scanner->ARRAY_TOKENS = calloc(200,sizeof(int)); //se crea un array para almacenar tokens
+	scanner->SIZE_ARRAY_TOKENS = 0;
+
 	char* sumador_caracteres = calloc(20,sizeof(char));
 
 	int posicion = 0;
 	int posicion_sumador = 0;
+	int numero_token = 0;
 	while (estado_actual != -1 && file_chain[posicion] != '\0'){
 		estado_actual = fila(columna(file_chain[posicion]));
 		if (esEstadoFinal(estado_actual)) {
 			sumador_caracteres[posicion_sumador] = '\0';
 			//printf("%s ",sumador_caracteres);
-			printf("%s \n",imprimirToken(estado_actual));
+			numero_token = estado_actual;
+			if (estado_actual == 3) { //es un identificador
+				numero_token = cambiarTokenIdentificador(scanner,sumador_caracteres);
+			}
+			printf("%s \n",imprimirToken(numero_token));
+			agregarToken(scanner,numero_token);
 			posicion_sumador = 0;
 			if (estado_actual != 3 && estado_actual != 5) { //es identificador o constante
 				posicion++; //avanzo

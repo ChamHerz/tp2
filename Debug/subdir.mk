@@ -5,18 +5,21 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../file.c \
+../parser.c \
 ../principal.c \
 ../scanner.c \
 ../tp2.c 
 
 OBJS += \
 ./file.o \
+./parser.o \
 ./principal.o \
 ./scanner.o \
 ./tp2.o 
 
 C_DEPS += \
 ./file.d \
+./parser.d \
 ./principal.d \
 ./scanner.d \
 ./tp2.d 

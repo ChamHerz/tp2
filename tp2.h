@@ -10,6 +10,7 @@
 
 #include "scanner.h"
 #include "file.h"
+#include "parser.h"
 
 typedef struct tp2 Tp2;
 
@@ -18,6 +19,7 @@ struct tp2 {
 	char* FILE_CHAIN;
 	Archivo* ARCHIVO;
 	Scanner* SCANNER;
+	Parser* PARSER;
 };
 
 //CONSTRUCTOR
