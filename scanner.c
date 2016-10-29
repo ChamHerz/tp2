@@ -60,7 +60,7 @@ void cargar_tabla_transicion(Scanner* scanner){
 		scanner->TABLA_TRANSICIONES[2][columna] = 3;
 
 	scanner->TABLA_TRANSICIONES[4][0] = 5;
-	scanner->TABLA_TRANSICIONES[4][1] = 3;
+	scanner->TABLA_TRANSICIONES[4][1] = 4;
 	for(columna=2;columna<COLUMNAS;columna++)
 		scanner->TABLA_TRANSICIONES[4][columna] = 5;
 
@@ -104,7 +104,7 @@ void crear_tabla_simbolos(Scanner* scanner){
 }
 
 int columna(char caracter){
-	if (caracter >= 97 && caracter <= 122){ //de a a z
+	if ((caracter >= 97 && caracter <= 122) | (caracter >= 65 && caracter <= 90)){ //de a a z
 		return 1;
 	}
 	if (caracter >= 48 && caracter <= 57){ //de 0 a 9
@@ -198,7 +198,7 @@ char* imprimirToken(int unEstado){
 	if (unEstado == 18) {
 		return "ESCRIBIR\0";
 	}
-	return "\0";
+	return "CARACTER INCORRECTO\0";
 }
 
 int cambiarTokenIdentificador(Scanner* scanner,char* unIdentificador){
@@ -240,10 +240,12 @@ void escanear_cadena(Scanner* scanner, char* file_chain){
 
 	char* sumador_caracteres = calloc(20,sizeof(char));
 
+	int size_chain = strlen(file_chain);
+
 	int posicion = 0;
 	int posicion_sumador = 0;
 	int numero_token = 0;
-	while (estado_actual != -1 && file_chain[posicion] != '\0'){
+	while (estado_actual != -1 && posicion < size_chain){
 		estado_actual = fila(columna(file_chain[posicion]));
 		if (esEstadoFinal(estado_actual)) {
 			sumador_caracteres[posicion_sumador] = '\0';
@@ -268,5 +270,9 @@ void escanear_cadena(Scanner* scanner, char* file_chain){
 		}
 
 		//estado_final = estado_actual;
+	}
+
+	if (estado_actual == -2) {
+		printf("\nErro en scanner, caracter invalido\n");
 	}
 }

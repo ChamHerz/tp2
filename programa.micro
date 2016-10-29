@@ -1,5 +1,4 @@
 inicio
-    leer (a,b);
-    cc := a + (b-2);
-    escribir (cc, a + 4);
+    escribir ( cc , b + (4 + 55), x);
+    escribir (324 - BF);
 final

@@ -3,6 +3,9 @@
 
 int main(){
 
+	char c = 'Z';
+	printf("%d",c);
+
 	Tp2* tp2;
 
 	tp2 = newTp2();
